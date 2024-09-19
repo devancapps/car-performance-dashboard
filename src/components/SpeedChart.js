@@ -1,58 +1,45 @@
 import React, { useRef, useEffect } from 'react';
-import * as THREE from 'three';
+import { Line } from 'react-chartjs-2';
+import ChartJS from '../chartConfig';
 
 function SpeedChart({ data }) {
-  const mountRef = useRef(null);
+  const chartRef = useRef(null);
 
   useEffect(() => {
-    const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(75, 1, 0.1, 1000);
-    const renderer = new THREE.WebGLRenderer();
-
-    renderer.setSize(300, 300);
-    mountRef.current.appendChild(renderer.domElement);
-
-    // Create a circular gauge
-    const gauge = new THREE.Mesh(
-      new THREE.CircleGeometry(1, 32),
-      new THREE.MeshBasicMaterial({ color: 0x00ff00 })
-    );
-    scene.add(gauge);
-
-    // Create a needle
-    const needle = new THREE.Mesh(
-      new THREE.BoxGeometry(0.1, 1, 0.1),
-      new THREE.MeshBasicMaterial({ color: 0xff0000 })
-    );
-    needle.position.y = 0.5;
-    scene.add(needle);
-
-    camera.position.z = 5;
-
-    const animate = () => {
-      requestAnimationFrame(animate);
-
-      // Rotate the needle based on speed
-      needle.rotation.z = THREE.MathUtils.degToRad((data.current / data.max) * 180 - 90);
-
-      renderer.render(scene, camera);
-    };
-
-    animate();
-
     return () => {
-      mountRef.current.removeChild(renderer.domElement);
+      if (chartRef.current) {
+        chartRef.current.destroy();
+      }
     };
-  }, [data]);
+  }, []);
 
-  return (
-    <div className="chart">
-      <h2>Speed</h2>
-      <div ref={mountRef}></div>
-      <p>Current: {data.current} km/h</p>
-      <p>Max: {data.max} km/h</p>
-    </div>
-  );
+  const chartData = {
+    labels: ['0s', '10s', '20s', '30s', '40s', '50s', '60s'],
+    datasets: [
+      {
+        label: 'Speed (km/h)',
+        data: data,
+        fill: false,
+        borderColor: 'rgb(75, 192, 192)',
+        tension: 0.1
+      }
+    ]
+  };
+
+  const options = {
+    responsive: true,
+    plugins: {
+      legend: {
+        position: 'top',
+      },
+      title: {
+        display: true,
+        text: 'Vehicle Speed'
+      }
+    }
+  };
+
+  return <Line ref={chartRef} data={chartData} options={options} />;
 }
 
 export default SpeedChart;

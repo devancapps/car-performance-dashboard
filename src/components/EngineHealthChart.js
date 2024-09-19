@@ -1,5 +1,8 @@
 import React from 'react';
 import { Doughnut } from 'react-chartjs-2';
+import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
+
+ChartJS.register(ArcElement, Tooltip, Legend);
 
 function EngineHealthChart({ data }) {
   const chartData = {
@@ -16,11 +19,19 @@ function EngineHealthChart({ data }) {
   const options = {
     responsive: true,
     maintainAspectRatio: false,
+    plugins: {
+      legend: {
+        position: 'bottom',
+      },
+      title: {
+        display: true,
+        text: 'Engine Health',
+      },
+    },
   };
 
   return (
-    <div className="chart">
-      <h2>Engine Health</h2>
+    <div style={{ height: '100%', width: '100%' }}>
       <Doughnut data={chartData} options={options} />
     </div>
   );

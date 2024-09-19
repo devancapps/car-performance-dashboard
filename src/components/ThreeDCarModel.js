@@ -1,63 +1,54 @@
 import React, { useRef, useEffect } from 'react';
 import * as THREE from 'three';
-import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 
 function ThreeDCarModel() {
   const mountRef = useRef(null);
 
   useEffect(() => {
-    const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(75, 1, 0.1, 1000);
-    const renderer = new THREE.WebGLRenderer({ antialias: true });
+    const width = mountRef.current.clientWidth;
+    const height = mountRef.current.clientHeight;
 
-    renderer.setSize(400, 400);
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 1000);
+    const renderer = new THREE.WebGLRenderer();
+
+    renderer.setSize(width, height);
     mountRef.current.appendChild(renderer.domElement);
 
-    // Add lighting
+    // Add a simple cube as a placeholder for the car model
+    const geometry = new THREE.BoxGeometry(1, 0.5, 2);
+    const material = new THREE.MeshPhongMaterial({ color: 0x00ff00 });
+    const car = new THREE.Mesh(geometry, material);
+    scene.add(car);
+
+    // Add lights
     const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
     scene.add(ambientLight);
+    const pointLight = new THREE.PointLight(0xffffff, 1);
+    pointLight.position.set(5, 5, 5);
+    scene.add(pointLight);
 
-    const directionalLight = new THREE.DirectionalLight(0xffffff, 0.5);
-    directionalLight.position.set(0, 1, 0);
-    scene.add(directionalLight);
-
-    // Load 3D car model
-    const loader = new GLTFLoader();
-    loader.load(
-      '/path/to/car_model.gltf',
-      (gltf) => {
-        scene.add(gltf.scene);
-      },
-      undefined,
-      (error) => {
-        console.error('An error occurred while loading the 3D model:', error);
-      }
-    );
-
+    // Set up camera and controls
     camera.position.z = 5;
+    const controls = new OrbitControls(camera, renderer.domElement);
 
+    // Animation loop
     const animate = () => {
       requestAnimationFrame(animate);
-
-      // Rotate the car model
-      scene.rotation.y += 0.01;
-
+      car.rotation.y += 0.01;
+      controls.update();
       renderer.render(scene, camera);
     };
-
     animate();
 
+    // Clean up
     return () => {
       mountRef.current.removeChild(renderer.domElement);
     };
   }, []);
 
-  return (
-    <div className="three-d-model">
-      <h2>3D Car Model</h2>
-      <div ref={mountRef}></div>
-    </div>
-  );
+  return <div ref={mountRef} style={{ width: '100%', height: '100%' }} />;
 }
 
 export default ThreeDCarModel;
