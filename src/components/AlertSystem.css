@@ -1,0 +1,32 @@
+.alert-system {
+    padding: 15px;
+  }
+  
+  .alert-system h2 {
+    margin-bottom: 10px;
+  }
+  
+  .alert-system ul {
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  .alert {
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 4px;
+    color: white;
+    font-weight: bold;
+  }
+  
+  .alert-low {
+    background-color: #FFA500;
+  }
+  
+  .alert-medium {
+    background-color: #FF8C00;
+  }
+  
+  .alert-high {
+    background-color: #FF0000;
+  }
