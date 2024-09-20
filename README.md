@@ -1,4 +1,5 @@
 # Car Performance Dashboard
+<img width="1229" alt="Performance Dashboard Image" src="https://github.com/user-attachments/assets/3572f340-1f21-4f70-92d5-f78ce6ea25ac">
 
 ## Project Overview
 
