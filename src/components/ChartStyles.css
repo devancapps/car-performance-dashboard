@@ -1,0 +1,41 @@
+.chart-container {
+    background-color: var(--cdk-card-background);
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 20px;
+  }
+  
+  .chart-container canvas {
+    max-width: 100% !important;
+  }
+  
+  .chart-title {
+    font-size: 18px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: var(--cdk-teal);
+  }
+  
+  /* Customizing Chart.js styles */
+  .chart-container .chartjs-tooltip {
+    background-color: var(--cdk-card-background) !important;
+    color: var(--cdk-text) !important;
+    border: 1px solid var(--cdk-teal);
+  }
+  
+  .chart-container .chartjs-tooltip-key {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    margin-right: 5px;
+  }
+  
+  @media (max-width: 768px) {
+    .chart-container {
+      padding: 10px;
+    }
+  
+    .chart-title {
+      font-size: 16px;
+    }
+  }

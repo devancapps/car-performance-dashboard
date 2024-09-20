@@ -1,29 +1,20 @@
-import React, { useRef, useEffect } from 'react';
+import React from 'react';
 import { Line } from 'react-chartjs-2';
-import ChartJS from '../chartConfig';
+import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend } from 'chart.js';
+import './ChartStyles.css';
 
-function SpeedChart({ data }) {
-  const chartRef = useRef(null);
+ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
 
-  useEffect(() => {
-    return () => {
-      if (chartRef.current) {
-        chartRef.current.destroy();
-      }
-    };
-  }, []);
-
+function SpeedChart({ data, dateRange }) {
   const chartData = {
-    labels: ['0s', '10s', '20s', '30s', '40s', '50s', '60s'],
-    datasets: [
-      {
-        label: 'Speed (km/h)',
-        data: data,
-        fill: false,
-        borderColor: 'rgb(75, 192, 192)',
-        tension: 0.1
-      }
-    ]
+    labels: data.map(d => new Date(d.timestamp).toLocaleTimeString()),
+    datasets: [{
+      label: 'Speed (km/h)',
+      data: data.map(d => d.value),
+      borderColor: '#4A9494',
+      backgroundColor: 'rgba(74, 148, 148, 0.2)',
+      fill: true,
+    }]
   };
 
   const options = {
@@ -34,12 +25,22 @@ function SpeedChart({ data }) {
       },
       title: {
         display: true,
-        text: 'Vehicle Speed'
+        text: 'Vehicle Speed',
+      },
+      tooltip: {
+        mode: 'index',
+        intersect: false,
+      }
+    },
+    scales: {
+      y: {
+        beginAtZero: true,
+        max: 200,
       }
     }
   };
 
-  return <Line ref={chartRef} data={chartData} options={options} />;
+  return <Line data={chartData} options={options} />;
 }
 
 export default SpeedChart;

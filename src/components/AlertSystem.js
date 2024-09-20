@@ -1,10 +1,11 @@
 import React from 'react';
-import { FaOilCan, FaExclamationTriangle, FaCar } from 'react-icons/fa';
+import { FaOilCan, FaExclamationTriangle, FaTachometerAlt, FaCar } from 'react-icons/fa';
 import './AlertSystem.css';
 
 const alertIcons = {
   'oil': <FaOilCan />,
   'engine': <FaExclamationTriangle />,
+  'speed': <FaTachometerAlt />,
   'general': <FaCar />
 };
 
@@ -15,7 +16,7 @@ function AlertSystem({ alerts }) {
       {alerts.length === 0 ? (
         <p>No active alerts</p>
       ) : (
-        <ul>
+        <ul className="alert-list">
           {alerts.map((alert, index) => (
             <li key={index} className={`alert alert-${alert.severity}`}>
               <span className="alert-icon">

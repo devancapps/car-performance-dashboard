@@ -23,13 +23,27 @@ body {
   padding: 20px;
 }
 
-h1 {
+/* Header styles */
+.dashboard-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.dashboard-header h1 {
   font-size: 2.5rem;
   color: var(--cdk-text);
-  margin-bottom: 30px;
+  margin: 0;
   font-weight: bold;
 }
 
+.current-time {
+  font-size: 1.2rem;
+  color: var(--cdk-teal);
+}
+
+/* Grid layout */
 .dashboard-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -37,7 +51,23 @@ h1 {
   margin-bottom: 30px;
 }
 
-.chart-container {
+.speed-section,
+.fuel-section,
+.engine-health-section {
+  grid-column: span 1;
+}
+
+.alerts-section,
+.model-section {
+  grid-column: span 3;
+}
+
+/* Common container styles */
+.chart-container,
+.alerts-container,
+.model-container,
+.speed-indicator,
+.fuel-gauge {
   background-color: var(--cdk-card-background);
   border-radius: 10px;
   padding: 20px;
@@ -45,11 +75,12 @@ h1 {
   overflow: hidden;
 }
 
-.chart-container::before {
+/* Decorative elements */
+.chart-container::before,
+.alerts-container::before,
+.model-container::after {
   content: '';
   position: absolute;
-  top: -50px;
-  right: -50px;
   width: 100px;
   height: 100px;
   border: 2px dotted var(--cdk-teal);
@@ -57,84 +88,95 @@ h1 {
   opacity: 0.2;
 }
 
-.chart-container h2 {
+.chart-container::before {
+  top: -50px;
+  right: -50px;
+}
+
+.alerts-container::before {
+  bottom: -30px;
+  left: -30px;
+  width: 60px;
+  height: 60px;
+}
+
+.model-container::after {
+  bottom: -40px;
+  right: -40px;
+  width: 80px;
+  height: 80px;
+}
+
+/* Chart styles */
+.chart-container h2,
+.alerts-container h2 {
   color: var(--cdk-text);
   font-size: 1.2rem;
   margin-bottom: 15px;
 }
 
-.alerts-container {
-  background-color: var(--cdk-card-background);
-  border-radius: 10px;
-  padding: 20px;
-  margin-bottom: 30px;
-  grid-column: 1 / -1;
-  position: relative;
-  overflow: hidden;
-}
-
-.alerts-container::before {
-  content: '';
-  position: absolute;
-  bottom: -30px;
-  left: -30px;
-  width: 60px;
-  height: 60px;
-  border: 2px dotted var(--cdk-teal);
-  border-radius: 50%;
-  opacity: 0.2;
-}
-
 .alerts-container h2 {
-  color: var(--cdk-text);
   font-size: 1.5rem;
-  margin-bottom: 15px;
 }
 
-.controls {
-  text-align: center;
-  margin-bottom: 30px;
-}
-
-button {
-  background-color: var(--cdk-teal);
-  color: var(--cdk-text);
-  border: none;
-  padding: 10px 20px;
-  font-size: 1rem;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-
-button:hover {
-  background-color: var(--cdk-light-teal);
-}
-
-.model-container {
-  background-color: var(--cdk-card-background);
-  border-radius: 10px;
-  padding: 20px;
-  height: 400px;
-  position: relative;
-  overflow: hidden;
-}
-
-.model-container::after {
-  content: '';
-  position: absolute;
-  bottom: -40px;
-  right: -40px;
-  width: 80px;
-  height: 80px;
-  border: 2px dotted var(--cdk-teal);
-  border-radius: 50%;
-  opacity: 0.2;
-}
-
-/* Chart styles */
 .chart-container canvas {
   max-width: 100%;
+}
+
+/* SpeedIndicator styles */
+.speed-indicator {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.speed-icon {
+  font-size: 2em;
+  color: var(--cdk-teal);
+}
+
+.speed-value {
+  font-size: 3em;
+  font-weight: bold;
+  margin: 10px 0;
+  color: var(--cdk-teal);
+}
+
+.speed-unit {
+  font-size: 1.2em;
+}
+
+/* FuelGauge styles */
+.fuel-gauge {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.fuel-icon {
+  font-size: 2em;
+  color: var(--cdk-teal);
+}
+
+.fuel-bar {
+  width: 30px;
+  height: 150px;
+  background-color: var(--cdk-card-background);
+  margin: 10px auto;
+  border: 2px solid var(--cdk-teal);
+  position: relative;
+}
+
+.fuel-level {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  background-color: var(--cdk-teal);
+  transition: height 0.5s ease;
+}
+
+.fuel-percentage {
+  font-size: 2.5rem;
+  font-weight: bold;
+  color: var(--cdk-teal);
 }
 
 /* Alert styles */
@@ -162,9 +204,68 @@ button:hover {
   background-color: var(--cdk-teal);
 }
 
+/* DateRangeSelector styles */
+.date-range-selector {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.date-range-selector input[type="date"] {
+  padding: 5px 10px;
+  border: 1px solid var(--cdk-teal);
+  border-radius: 5px;
+  background-color: var(--cdk-card-background);
+  color: var(--cdk-text);
+}
+
+/* 3D Model container */
+.model-container {
+  height: 400px;
+}
+
+/* Button styles */
+button {
+  background-color: var(--cdk-teal);
+  color: var(--cdk-text);
+  border: none;
+  padding: 10px 20px;
+  font-size: 1rem;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+button:hover {
+  background-color: var(--cdk-light-teal);
+}
+
 /* Responsive design */
 @media (max-width: 768px) {
   .dashboard-grid {
     grid-template-columns: 1fr;
+  }
+
+  .speed-section,
+  .fuel-section,
+  .engine-health-section,
+  .alerts-section,
+  .model-section {
+    grid-column: span 1;
+  }
+
+  .date-range-selector {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .dashboard-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .current-time {
+    margin-top: 10px;
   }
 }

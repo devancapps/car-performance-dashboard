@@ -1,70 +1,83 @@
 import React, { useState, useEffect } from 'react';
+import Header from './Header';
 import SpeedChart from './SpeedChart';
 import FuelChart from './FuelChart';
 import EngineHealthChart from './EngineHealthChart';
 import AlertSystem from './AlertSystem';
 import ThreeDCarModel from './ThreeDCarModel';
+import SpeedIndicator from './SpeedIndicator';
+import FuelGauge from './FuelGauge';
+import DateRangeSelector from './DateRangeSelector';
+import { generateMockData } from '../utils/mockDataGenerator';
 import './Dashboard.css';
 
-// Mock data generator functions
-const generateSpeedData = () => Array(7).fill(0).map(() => Math.floor(Math.random() * 180));
-const generateFuelData = () => Array(7).fill(0).map(() => Math.floor(Math.random() * 100));
-const generateEngineHealthData = () => ({
-  healthy: Math.floor(Math.random() * 70) + 30,
-  warning: Math.floor(Math.random() * 20),
-  critical: Math.floor(Math.random() * 10)
-});
-const generateAlerts = () => [
-  { severity: 'low', message: 'Oil change needed soon' },
-  { severity: 'medium', message: 'Tire pressure low' },
-  { severity: 'high', message: 'Check engine light on' }
-].filter(() => Math.random() > 0.5);
-
 function Dashboard() {
-  const [speedData, setSpeedData] = useState(generateSpeedData());
-  const [fuelData, setFuelData] = useState(generateFuelData());
-  const [engineHealthData, setEngineHealthData] = useState(generateEngineHealthData());
-  const [alerts, setAlerts] = useState(generateAlerts());
-  const [showCarModel, setShowCarModel] = useState(false);
+  const [carData, setCarData] = useState({
+    currentSpeed: 0,
+    currentFuel: 0,
+    speedHistory: [],
+    fuelHistory: [],
+    engineHealth: { healthy: 70, warning: 20, critical: 10 },
+    alerts: []
+  });
+  const [dateRange, setDateRange] = useState({ startDate: null, endDate: null });
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      setSpeedData(generateSpeedData());
-      setFuelData(generateFuelData());
-      setEngineHealthData(generateEngineHealthData());
-      setAlerts(generateAlerts());
-    }, 5000); // Update every 5 seconds
+    const updateData = () => {
+      const newData = generateMockData();
+      setCarData(prevData => ({
+        ...prevData,
+        currentSpeed: newData.currentSpeed,
+        currentFuel: newData.currentFuel,
+        speedHistory: [...prevData.speedHistory.slice(-6), newData.currentSpeed],
+        fuelHistory: [...prevData.fuelHistory.slice(-6), newData.currentFuel],
+        engineHealth: newData.engineHealth,
+        alerts: newData.alerts
+      }));
+    };
+
+    updateData(); // Initial update
+    const interval = setInterval(updateData, 5000); // Update every 5 seconds
 
     return () => clearInterval(interval);
   }, []);
 
+  const handleDateRangeChange = (range) => {
+    setDateRange(range);
+    // Here you would typically fetch historical data based on the range
+    console.log('Fetching data for range:', range);
+  };
+
   return (
     <div className="dashboard">
-      <h1>Car Performance Dashboard</h1>
+      <Header carModel="Tesla Model S" />
       <div className="dashboard-grid">
-        <div className="chart-container">
-          <SpeedChart data={speedData} />
+        <div className="speed-section">
+          <SpeedIndicator speed={carData.currentSpeed} />
+          <SpeedChart data={carData.speedHistory} dateRange={dateRange} />
         </div>
-        <div className="chart-container">
-          <FuelChart data={fuelData} />
+        <div className="fuel-section">
+          <FuelGauge fuelLevel={carData.currentFuel} />
+          <FuelChart data={carData.fuelHistory} dateRange={dateRange} />
         </div>
-        <div className="chart-container">
-          <EngineHealthChart data={engineHealthData} />
+        <div className="engine-health-section">
+          <EngineHealthChart data={carData.engineHealth} />
+        </div>
+        <div className="alerts-section">
+          <AlertSystem alerts={carData.alerts} />
+        </div>
+        <div className="model-section">
+          <ThreeDCarModel 
+            alerts={carData.alerts}
+            performance={{
+              speed: carData.currentSpeed,
+              fuel: carData.currentFuel,
+              engineHealth: carData.engineHealth
+            }}
+          />
         </div>
       </div>
-      <div className="alerts-container">
-        <AlertSystem alerts={alerts} />
-      </div>
-      <div className="controls">
-        <button onClick={() => setShowCarModel(!showCarModel)}>
-          {showCarModel ? 'Hide 3D Model' : 'Show 3D Model'}
-        </button>
-      </div>
-      {showCarModel && (
-        <div className="model-container">
-          <ThreeDCarModel />
-        </div>
-      )}
+      <DateRangeSelector onRangeChange={handleDateRangeChange} />
     </div>
   );
 }
