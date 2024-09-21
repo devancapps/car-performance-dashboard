@@ -21,6 +21,7 @@ function Dashboard() {
     alerts: []
   });
   const [dateRange, setDateRange] = useState({ startDate: null, endDate: null });
+  const [showCarModel, setShowCarModel] = useState(false);
 
   useEffect(() => {
     const updateData = () => {
@@ -29,15 +30,15 @@ function Dashboard() {
         ...prevData,
         currentSpeed: newData.currentSpeed,
         currentFuel: newData.currentFuel,
-        speedHistory: [...prevData.speedHistory.slice(-6), newData.currentSpeed],
-        fuelHistory: [...prevData.fuelHistory.slice(-6), newData.currentFuel],
+        speedHistory: [...prevData.speedHistory.slice(-6), { time: new Date(), value: newData.currentSpeed }],
+        fuelHistory: [...prevData.fuelHistory.slice(-6), { time: new Date(), value: newData.currentFuel }],
         engineHealth: newData.engineHealth,
         alerts: newData.alerts
       }));
     };
 
     updateData(); // Initial update
-    const interval = setInterval(updateData, 5000); // Update every 5 seconds
+    const interval = setInterval(updateData, 10000); // Update every 10 seconds
 
     return () => clearInterval(interval);
   }, []);
@@ -66,6 +67,14 @@ function Dashboard() {
         <div className="alerts-section">
           <AlertSystem alerts={carData.alerts} />
         </div>
+      </div>
+      <DateRangeSelector onRangeChange={handleDateRangeChange} />
+      <div className="controls">
+        <button onClick={() => setShowCarModel(!showCarModel)}>
+          {showCarModel ? 'Hide 3D Model' : 'Show 3D Model'}
+        </button>
+      </div>
+      {showCarModel && (
         <div className="model-section">
           <ThreeDCarModel 
             alerts={carData.alerts}
@@ -76,8 +85,7 @@ function Dashboard() {
             }}
           />
         </div>
-      </div>
-      <DateRangeSelector onRangeChange={handleDateRangeChange} />
+      )}
     </div>
   );
 }

@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 
-
 function DateRangeSelector({ onRangeChange }) {
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');

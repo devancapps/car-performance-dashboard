@@ -1,7 +1,6 @@
 import React from 'react';
 import { FaGasPump } from 'react-icons/fa';
 
-
 function FuelGauge({ fuelLevel }) {
   return (
     <div className="fuel-gauge">

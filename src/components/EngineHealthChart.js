@@ -1,7 +1,6 @@
 import React from 'react';
 import { Doughnut } from 'react-chartjs-2';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
-import './ChartStyles.css';
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
@@ -10,8 +9,9 @@ function EngineHealthChart({ data }) {
     labels: ['Healthy', 'Warning', 'Critical'],
     datasets: [{
       data: [data.healthy, data.warning, data.critical],
-      backgroundColor: ['#4CAF50', '#FFC107', '#F44336'],
-      hoverBackgroundColor: ['#45a049', '#e6ae06', '#da190b'],
+      backgroundColor: ['#4A9494', '#FFA500', '#FF4500'],
+      borderColor: '#1E1E1E',
+      borderWidth: 2
     }]
   };
 
@@ -20,24 +20,22 @@ function EngineHealthChart({ data }) {
     plugins: {
       legend: {
         position: 'top',
+        labels: {
+          color: 'var(--cdk-light-teal)'
+        }
       },
       title: {
         display: true,
         text: 'Engine Health',
+        color: 'var(--cdk-light-teal)',
+        font: {
+          size: 16
+        }
       },
       tooltip: {
-        callbacks: {
-          label: function(context) {
-            let label = context.label || '';
-            if (label) {
-              label += ': ';
-            }
-            if (context.parsed !== null) {
-              label += Math.round(context.parsed) + '%';
-            }
-            return label;
-          }
-        }
+        backgroundColor: 'rgba(30, 30, 30, 0.8)',
+        titleColor: 'var(--cdk-light-teal)',
+        bodyColor: 'var(--cdk-text)'
       }
     }
   };

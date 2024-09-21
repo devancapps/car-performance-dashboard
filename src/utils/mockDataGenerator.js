@@ -8,9 +8,9 @@ export const generateMockData = () => {
         critical: Math.floor(Math.random() * 10)
       },
       alerts: [
-        { type: 'oil', severity: 'low', message: 'Oil change needed soon' },
-        { type: 'engine', severity: 'high', message: 'Check engine light on' },
-        { type: 'tire', severity: 'medium', message: 'Low tire pressure' }
-      ].filter(() => Math.random() > 0.5)
+        { severity: 'low', message: 'Oil change needed soon' },
+        { severity: 'medium', message: 'Low tire pressure' },
+        { severity: 'high', message: 'Check engine light on' }
+      ].filter(() => Math.random() > 0.7) // Randomly include some alerts
     };
   };
